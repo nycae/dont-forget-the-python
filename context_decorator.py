@@ -7,7 +7,7 @@ def my_context():
     print("Setup context")
     try:
         yield "Something"
-    except Exception as ex:
+    except Exception:
         print("Rollback")
     else:
         print("Success")
