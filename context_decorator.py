@@ -6,7 +6,7 @@ import functools
 def my_context():
     print("Setup context")
     try:
-        yield "Something"
+        yield "Something" or None
     except Exception:
         print("Rollback")
     else:
@@ -18,11 +18,11 @@ def my_context():
 def context_decorator(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if context := kwargs.pop('context', None):
-            return func(*args, context=context, **kwargs)
-        else:
+        if not 'context' in kwargs:
             with my_context() as context:
                 return func(*args, context=context, **kwargs)
+        else:
+            return func(*args, **kwargs)
     return wrapper
 
 
@@ -35,4 +35,4 @@ def test(context):
 
 if __name__ == '__main__':
     test()
-
+    test(42)
